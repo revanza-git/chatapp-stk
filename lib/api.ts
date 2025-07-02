@@ -1,6 +1,7 @@
 import { ChatRequest, ChatResponse, PolicyFile } from './types';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+// Use environment variable for API URL, fallback to localhost for development
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
 
 export async function sendChatMessage(request: ChatRequest): Promise<ChatResponse> {
   const response = await fetch(`${API_BASE_URL}/chat`, {
@@ -12,7 +13,8 @@ export async function sendChatMessage(request: ChatRequest): Promise<ChatRespons
   });
 
   if (!response.ok) {
-    throw new Error('Failed to send chat message');
+    const errorText = await response.text();
+    throw new Error(`Failed to send chat message: ${response.status} ${errorText}`);
   }
 
   return response.json();
@@ -22,7 +24,8 @@ export async function getAllPolicies(): Promise<PolicyFile[]> {
   const response = await fetch(`${API_BASE_URL}/policies`);
 
   if (!response.ok) {
-    throw new Error('Failed to fetch policies');
+    const errorText = await response.text();
+    throw new Error(`Failed to fetch policies: ${response.status} ${errorText}`);
   }
 
   return response.json();
@@ -32,7 +35,8 @@ export async function checkHealth(): Promise<{ status: string }> {
   const response = await fetch(`${API_BASE_URL}/health`);
 
   if (!response.ok) {
-    throw new Error('Backend health check failed');
+    const errorText = await response.text();
+    throw new Error(`Backend health check failed: ${response.status} ${errorText}`);
   }
 
   return response.json();

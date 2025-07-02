@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # Your Go backend
+  chatbot-backend:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - OLLAMA_HOST=ollama:11434
+    depends_on:
+      - ollama
+    networks:
+      - chatbot-network
+
+  # Ollama service for LLM
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    environment:
+      - OLLAMA_MODELS=/root/.ollama/models
+    networks:
+      - chatbot-network
+    # For GPU support (optional)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+volumes:
+  ollama-data:
+
+networks:
+  chatbot-network:
+    driver: bridge 
