@@ -11,7 +11,6 @@ import { ChatMessage } from "./ChatMessage";
 import { sendChatMessage } from "@/lib/api";
 import { ChatMessage as ChatMessageType, ChatMode } from "@/lib/types";
 import { Send, Shield, BookOpen, MessageCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 export function ChatInterface() {
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
@@ -49,13 +48,13 @@ export function ChatInterface() {
         content: response.response,
         role: "assistant",
         timestamp: new Date(),
-        type: response.type as any,
+        type: (response.type as ChatMode) || "general",
         policyFiles: response.policy_files,
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
     },
-    onError: (error) => {
+    onError: () => {
       const errorMessage: ChatMessageType = {
         id: generateMessageId(),
         content:
@@ -126,8 +125,8 @@ export function ChatInterface() {
   // Don't render messages until client-side hydration is complete
   if (!isClient) {
     return (
-      <div className="w-full max-w-4xl mx-auto flex flex-col h-full">
-        <Card className="flex-1 flex flex-col h-full">
+      <div className="w-full max-w-7xl mx-auto flex flex-col h-full">
+        <Card className="flex-1 flex flex-col h-full shadow-lg">
           <CardHeader className="flex-shrink-0">
             <CardTitle className="flex items-center gap-2">
               <Shield className="w-6 h-6 text-blue-600" />
@@ -144,8 +143,8 @@ export function ChatInterface() {
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto flex flex-col h-full">
-      <Card className="flex-1 flex flex-col h-full">
+    <div className="w-full max-w-7xl mx-auto flex flex-col h-full">
+      <Card className="flex-1 flex flex-col h-full shadow-lg">
         <CardHeader className="flex-shrink-0">
           <CardTitle className="flex items-center gap-2">
             <Shield className="w-6 h-6 text-blue-600" />
