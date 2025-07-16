@@ -2,6 +2,8 @@
 
 A comprehensive, AI-powered platform designed to help organizations manage IT security policies, user onboarding, and document management. Built with Next.js 15, React 19, TypeScript for the frontend and Go with Gin for the backend, fully containerized with Docker.
 
+🌟 **NEW**: Deploy to the cloud for **FREE** with Railway, Render, or Fly.io! See [Cloud Deployment Guide](DEPLOYMENT.md) for details.
+
 ## 🚀 Features
 
 ### 🔐 User Authentication & Authorization
@@ -491,16 +493,55 @@ docker-compose exec postgres psql -U chatbot_user -d chatbot_db -c "SELECT 1;"
 3. **AI not responding**: Verify Ollama container is running and models are downloaded
 4. **File uploads failing**: Check volume permissions and disk space
 
-## 🚀 Deployment
+## ☁️ Cloud Deployment (FREE)
 
-### Production Deployment
+Deploy your application to the cloud for **FREE** using Docker! We've optimized the setup for free tier hosting:
+
+### 🏆 **Recommended Free Platforms:**
+
+| Platform | Free Tier | Best For | Database | Setup Difficulty |
+|----------|-----------|----------|----------|------------------|
+| **Railway** ⭐ | $5 credits/month | Docker apps | PostgreSQL included | ⭐ Easy |
+| **Render** | 750hrs/service | Multiple services | 90 days free | ⭐⭐ Medium |
+| **Fly.io** | 3 shared VMs | Performance | Paid after limit | ⭐⭐⭐ Advanced |
+
+### 🚀 **Quick Deploy with Railway (Recommended)**:
+1. **Push to GitHub**: `git push origin main`
+2. **Sign up**: [railway.app](https://railway.app) 
+3. **Connect repository**: Railway auto-detects Docker setup
+4. **Configure environment**:
+   ```env
+   JWT_SECRET=VElJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUk=
+   AI_ENABLED=false
+   NODE_ENV=production
+   ```
+5. **Deploy**: One-click deployment! 🎉
+
+### 📁 **Cloud Deployment Files:**
+- **[DEPLOYMENT.md](DEPLOYMENT.md)**: Complete step-by-step guide for all platforms
+- **[.env.production](.env.production)**: Production environment template
+- **[railway.json](railway.json)**: Railway platform configuration
+- **[render.yaml](render.yaml)**: Render platform configuration
+
+### 🛡️ **Free Tier Optimizations:**
+- ✅ **AI Disabled by default**: Saves compute resources
+- ✅ **Efficient containers**: Multi-stage Docker builds
+- ✅ **Database included**: PostgreSQL on most platforms
+- ✅ **SSL/HTTPS**: Automatic certificates
+- ✅ **Auto-scaling**: Handles traffic spikes
+
+**📖 For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md)**
+
+## 🚀 Local Deployment
+
+### Production Deployment (Local/VPS)
 1. **Update environment variables** for production
 2. **Use strong JWT secrets** and database passwords
 3. **Configure SSL/TLS** with reverse proxy (nginx/traefik)
 4. **Set up monitoring** and logging aggregation
 5. **Configure backups** for database and uploaded files
 
-### Cloud Platforms
+### Enterprise Cloud Platforms
 - **AWS**: ECS/Fargate with RDS and S3
 - **Google Cloud**: Cloud Run with Cloud SQL
 - **Azure**: Container Instances with Azure Database
@@ -509,8 +550,9 @@ docker-compose exec postgres psql -U chatbot_user -d chatbot_db -c "SELECT 1;"
 ## 📄 Documentation
 
 - **[Docker Setup Guide](DOCKER.md)**: Comprehensive Docker documentation
+- **[Cloud Deployment Guide](DEPLOYMENT.md)**: Free cloud hosting deployment instructions  
 - **[API Documentation](docs/api.md)**: Complete API reference (if available)
-- **[Deployment Guide](docs/deployment.md)**: Production deployment instructions (if available)
+- **[Production Environment](.env.production)**: Cloud deployment environment template
 
 ## 🤝 Contributing
 
