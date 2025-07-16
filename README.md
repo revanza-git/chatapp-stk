@@ -36,6 +36,96 @@ A comprehensive, AI-powered platform designed to help organizations manage IT se
 - **File Upload**: Drag-and-drop with progress indicators
 - **Real-time Updates**: Live chat and status updates
 
+## 🏗️ System Architecture
+
+The platform follows a modern microservices architecture with Docker containerization:
+
+```mermaid
+graph TB
+    subgraph "Client Layer"
+        U[👤 Users<br/>Web Browser]
+    end
+
+    subgraph "Docker Container Network"
+        subgraph "Frontend Container<br/>:3000"
+            FE[🖥️ Next.js Frontend<br/>React 19 + TypeScript<br/>Tailwind CSS + Radix UI]
+        end
+
+        subgraph "Backend Container<br/>:8080"
+            BE[⚙️ Go Backend<br/>Gin Framework<br/>JWT Auth + RBAC<br/>File Processing]
+        end
+
+        subgraph "Database Container<br/>:5433"
+            DB[(🗄️ PostgreSQL 15<br/>GORM ORM<br/>User Data<br/>Documents<br/>Audit Logs)]
+        end
+
+        subgraph "AI Container<br/>:11434"
+            AI[🤖 Ollama Server<br/>Llama 3.1 Model<br/>AI Chat Engine]
+        end
+    end
+
+    subgraph "Persistent Storage"
+        PV1[📦 postgres-data<br/>Database Files]
+        PV2[📦 ollama-data<br/>AI Models]
+        PV3[📦 uploads-data<br/>Document Files]
+    end
+
+    subgraph "External Services"
+        HF[🤗 Hugging Face API<br/>Fallback AI Service]
+    end
+
+    %% User interactions
+    U -->|HTTPS Requests| FE
+    FE -->|API Calls| BE
+
+    %% Backend connections
+    BE -->|SQL Queries| DB
+    BE -->|AI Requests| AI
+    BE -->|Fallback AI| HF
+    BE -->|File Storage| PV3
+
+    %% Database storage
+    DB -.->|Persist| PV1
+
+    %% AI model storage
+    AI -.->|Persist| PV2
+
+    %% User flows
+    U -.->|"1. Login/Register"| FE
+    FE -.->|"2. Authentication"| BE
+    BE -.->|"3. User Verification"| DB
+    U -.->|"4. Upload Documents"| FE
+    FE -.->|"5. File Processing"| BE
+    BE -.->|"6. Store Metadata"| DB
+    U -.->|"7. Chat with AI"| FE
+    FE -.->|"8. Process Chat"| BE
+    BE -.->|"9. AI Response"| AI
+
+    %% Styling
+    classDef containerStyle fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef storageStyle fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef externalStyle fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef userStyle fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+
+    class FE,BE,DB,AI containerStyle
+    class PV1,PV2,PV3 storageStyle
+    class HF externalStyle
+    class U userStyle
+```
+
+### 🔄 Data Flow
+1. **User Authentication**: Users access the frontend and authenticate via JWT tokens
+2. **Document Management**: Files are uploaded, processed, and stored with metadata in PostgreSQL
+3. **AI Integration**: Chat requests are processed by Ollama with Hugging Face as fallback
+4. **Audit Logging**: All user activities are tracked in the database for compliance
+5. **Persistent Storage**: Data persists across container restarts using Docker volumes
+
+### 🌐 Network Architecture
+- **Frontend (Port 3000)**: Serves the React application with SSR/SSG capabilities
+- **Backend (Port 8080)**: RESTful API with authentication, file processing, and AI integration
+- **Database (Port 5433)**: PostgreSQL with ACID compliance and backup capabilities
+- **AI Service (Port 11434)**: Ollama server for local AI inference with model caching
+
 ## 🛠️ Technology Stack
 
 ### Frontend
