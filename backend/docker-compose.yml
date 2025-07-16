@@ -8,10 +8,37 @@ services:
       - "8080:8080"
     environment:
       - OLLAMA_HOST=ollama:11434
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=chatbot_user
+      - DB_PASSWORD=chatbot_password
+      - DB_NAME=chatbot_db
+      - DB_SSLMODE=disable
     depends_on:
       - ollama
+      - postgres
     networks:
       - chatbot-network
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=chatbot_db
+      - POSTGRES_USER=chatbot_user
+      - POSTGRES_PASSWORD=chatbot_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - chatbot-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U chatbot_user -d chatbot_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # Ollama service for LLM
   ollama:
@@ -35,6 +62,7 @@ services:
 
 volumes:
   ollama-data:
+  postgres-data:
 
 networks:
   chatbot-network:

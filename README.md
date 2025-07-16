@@ -1,16 +1,40 @@
-# IT Security Policy Chatbot
+# IT Security Policy Chatbot & Document Management System
 
-A modern, AI-powered chatbot application designed to help users navigate IT security policies and onboarding procedures. Built with Next.js 15, React 19, TypeScript for the frontend and Go with Gin for the backend.
+A comprehensive, AI-powered platform designed to help organizations manage IT security policies, user onboarding, and document management. Built with Next.js 15, React 19, TypeScript for the frontend and Go with Gin for the backend, fully containerized with Docker.
 
 ## 🚀 Features
 
-- **Security Onboarding Assistance**: Get guided help with security awareness topics including passwords, VPN setup, email security, and data protection policies
-- **Policy Search**: Quickly find and access specific security policies, procedures, and guidelines relevant to your role
-- **Intelligent Chat Modes**: Choose between "Security Onboarding" and "Policy Search" for targeted assistance
-- **AI-Powered Responses**: Uses Ollama (Llama 3.1) or Hugging Face APIs for intelligent, context-aware responses
-- **Modern UI**: Beautiful, responsive interface built with Tailwind CSS v4 and Radix UI components
-- **Real-time Chat**: Interactive chat interface with message history and typing indicators
-- **Robust Fallback System**: Automatic fallback from Ollama → Hugging Face → Mock responses
+### 🔐 User Authentication & Authorization
+- **Secure Login/Registration**: JWT-based authentication system
+- **Role-Based Access Control**: User, Admin, HR, and IT Security roles
+- **User Profile Management**: Update personal information and credentials
+- **Protected Routes**: Secure access to sensitive features
+
+### 🗄️ Document Management
+- **File Upload System**: Support for PDF, DOC, DOCX files up to 10MB
+- **Document Processing**: Automatic text extraction and indexing
+- **Smart Downloads**: Original filename preservation with clean naming
+- **Document Search**: Find documents by content and metadata
+- **CRUD Operations**: Create, read, update, and delete documents
+
+### 🤖 AI-Powered Chat Assistant
+- **Security Onboarding Assistance**: Guided help with security awareness topics
+- **Policy Search**: Intelligent document and policy retrieval
+- **Context-Aware Responses**: AI understands uploaded documents
+- **Multiple AI Backends**: Ollama (Llama 3.1) with Hugging Face fallback
+- **Chat History**: Persistent conversation tracking
+
+### 👥 Admin Dashboard
+- **User Management**: Create, update, deactivate user accounts
+- **Role Assignment**: Manage user permissions and access levels
+- **Audit Logging**: Track all system activities and user actions
+- **System Monitoring**: View platform usage and health metrics
+
+### 🎨 Modern User Interface
+- **Responsive Design**: Optimized for desktop, tablet, and mobile
+- **Dashboard Layout**: Tabbed interface for different functions
+- **File Upload**: Drag-and-drop with progress indicators
+- **Real-time Updates**: Live chat and status updates
 
 ## 🛠️ Technology Stack
 
@@ -20,100 +44,96 @@ A modern, AI-powered chatbot application designed to help users navigate IT secu
 - **Styling**: Tailwind CSS v4
 - **UI Components**: Radix UI primitives with custom styling
 - **State Management**: TanStack React Query v5
+- **Authentication**: JWT with React Context
+- **File Upload**: React Dropzone
 - **Icons**: Lucide React
-- **Development**: ESLint 9, Turbopack
 
 ### Backend
-- **Language**: Go 1.23+
+- **Language**: Go 1.24+
 - **Framework**: Gin (HTTP web framework)
+- **Database**: PostgreSQL with GORM ORM
+- **Authentication**: JWT tokens with middleware
+- **File Processing**: PDF, DOC, DOCX text extraction
 - **AI Integration**: 
-  - Ollama API (via Google Colab or local)
-  - Hugging Face Inference API (DialoGPT-medium)
-  - Mock responses for development
-- **CORS**: Configured for cross-origin requests
-- **Docker**: Full containerization support
+  - Ollama API (Llama 3.1)
+  - Hugging Face Inference API
+  - Fallback response system
+- **CORS**: Multi-origin support for Docker/local development
 
-## 📦 Installation & Setup
+### Infrastructure
+- **Containerization**: Docker & Docker Compose
+- **Database**: PostgreSQL 15 with persistent volumes
+- **AI Model Server**: Ollama container with GPU support
+- **File Storage**: Volume-mounted uploads with backup support
+- **Health Checks**: Container health monitoring
+
+## 📦 Quick Start with Docker (Recommended)
 
 ### Prerequisites
-- Node.js 18+
-- Go 1.23+
-- Docker (optional)
+- [Docker Desktop](https://docs.docker.com/get-docker/) installed
+- At least 4GB of available RAM
 
-### Quick Start
+### 🚀 One-Click Setup
 
-1. **Clone the repository**:
+#### For Windows:
+```cmd
+# Run the startup script
+docker-start.bat
+```
+
+#### For Linux/macOS:
 ```bash
+# Make the script executable and run
+chmod +x docker-start.sh
+./docker-start.sh
+```
+
+#### Manual Docker Setup:
+```bash
+# Clone the repository
 git clone <repository-url>
 cd chatapp-stk
+
+# Copy environment file
+cp .env.example .env
+
+# Start all services
+docker-compose up --build -d
+
+# Setup AI model (optional)
+docker-compose exec ollama ollama pull llama2
 ```
 
-2. **Install frontend dependencies**:
-```bash
-npm install
-```
-
-3. **Start the frontend** (in one terminal):
-```bash
-npm run dev
-```
-
-4. **Start the backend** (in another terminal):
-```bash
-cd backend
-go mod tidy
-go run main.go
-```
-
-The application will be available at:
-- Frontend: [http://localhost:3000](http://localhost:3000)
-- Backend API: [http://localhost:8080](http://localhost:8080)
-
-### Environment Configuration
-
-#### Frontend (.env.local)
-```bash
-NEXT_PUBLIC_API_URL=http://localhost:8080/api
-```
-
-#### Backend Environment Variables
-```bash
-# Primary AI Backend (Ollama via Google Colab)
-OLLAMA_URL=https://your-ngrok-url.ngrok.io
-
-# Fallback AI Backend (Hugging Face)
-HF_TOKEN=hf_your_hugging_face_token_here
-```
-
-### AI Backend Setup
-
-#### Option 1: Google Colab + Ollama (Recommended)
-1. Upload `backend/colab_ollama_setup.ipynb` to Google Colab
-2. Run all cells to setup Ollama with Llama 3.1
-3. Copy the ngrok URL and set it as `OLLAMA_URL`
-
-See `backend/setup_colab_integration.md` for detailed instructions.
-
-#### Option 2: Local Docker Setup
-```bash
-cd backend
-docker-compose up --build
-```
-
-#### Option 3: Hugging Face Only
-Set only the `HF_TOKEN` environment variable.
+### 🌐 Access Your Application
+Once running, visit:
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8080
+- **Database**: localhost:5433
+- **Ollama AI**: http://localhost:11434
 
 ## 🏗️ Project Structure
 
 ```
 chatapp-stk/
 ├── app/                          # Next.js App Router
+│   ├── dashboard/
+│   │   └── page.tsx             # Main dashboard with document management
+│   ├── login/
+│   │   └── page.tsx             # User login page
+│   ├── register/
+│   │   └── page.tsx             # User registration page
 │   ├── layout.tsx               # Root layout with providers
-│   ├── page.tsx                 # Main chat page
-│   ├── providers.tsx            # React Query provider
+│   ├── page.tsx                 # Landing page
+│   ├── providers.tsx            # React Query & Auth providers
 │   └── globals.css              # Global Tailwind styles
 │
 ├── components/                   # React components
+│   ├── admin/
+│   │   ├── AuditLogs.tsx        # System audit logging
+│   │   └── UserManagement.tsx   # User administration
+│   ├── auth/
+│   │   ├── ProtectedRoute.tsx   # Route protection wrapper
+│   │   └── UserProfile.tsx      # User profile management
 │   ├── chatbot/
 │   │   ├── ChatInterface.tsx    # Main chat component
 │   │   └── ChatMessage.tsx      # Individual message component
@@ -122,25 +142,39 @@ chatapp-stk/
 │       ├── button.tsx
 │       ├── card.tsx
 │       ├── dialog.tsx
+│       ├── file-upload.tsx      # Drag-and-drop file upload
 │       ├── input.tsx
 │       ├── scroll-area.tsx
 │       └── separator.tsx
 │
 ├── lib/                         # Utility libraries
 │   ├── api.ts                   # API client functions
+│   ├── auth.tsx                 # Authentication context & utilities
 │   ├── types.ts                 # TypeScript type definitions
 │   └── utils.ts                 # Utility functions
 │
 ├── backend/                     # Go backend server
-│   ├── main.go                  # Main server with API endpoints
-│   ├── go.mod                   # Go dependencies
+│   ├── main.go                  # Main server with all API endpoints
+│   ├── go.mod                   # Go dependencies (1.24+)
 │   ├── go.sum                   # Go dependency checksums
-│   ├── Dockerfile               # Container configuration
-│   ├── docker-compose.yml       # Multi-service setup
+│   ├── init-db.sql              # Database initialization
+│   ├── uploads/                 # File storage directory
+│   ├── Dockerfile               # Backend container configuration
+│   ├── docker-compose.yml       # Legacy compose file
 │   ├── colab_ollama_setup.ipynb # Google Colab setup notebook
-│   └── setup_colab_integration.md # Setup documentation
+│   └── setup_colab_integration.md # AI setup documentation
 │
-└── Configuration files
+├── Docker Configuration
+│   ├── docker-compose.yml       # Multi-service orchestration
+│   ├── Dockerfile.frontend      # Frontend container
+│   ├── docker-start.bat         # Windows startup script
+│   ├── docker-start.sh          # Linux/macOS startup script
+│   ├── DOCKER.md               # Comprehensive Docker guide
+│   ├── .dockerignore           # Frontend build optimization
+│   ├── backend/.dockerignore   # Backend build optimization
+│   └── .env.example            # Environment configuration template
+│
+└── Configuration Files
     ├── next.config.ts           # Next.js configuration
     ├── package.json             # Frontend dependencies
     ├── tsconfig.json            # TypeScript configuration
@@ -150,166 +184,272 @@ chatapp-stk/
 
 ## 🔌 API Endpoints
 
-### Backend API (Port 8080)
+### Authentication
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/auth/login` | User login |
+| `POST` | `/api/auth/register` | User registration |
 
+### Chat & AI
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `POST` | `/api/chat` | Send chat message and get AI response |
-| `GET` | `/api/policies` | Retrieve all available security policies |
-| `GET` | `/health` | Backend health check |
 
-#### Chat API Request/Response
-```typescript
-// Request
-{
-  "message": "What is our password policy?",
-  "type": "onboarding" | "policy_search"
-}
+### Document Management
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/documents` | List all documents (paginated) |
+| `POST` | `/api/documents` | Upload new document |
+| `GET` | `/api/documents/:id` | Get document details |
+| `PUT` | `/api/documents/:id` | Update document |
+| `DELETE` | `/api/documents/:id` | Delete document |
+| `GET` | `/api/documents/:id/download` | Download original file |
 
-// Response
-{
-  "response": "Password policy details...",
-  "type": "onboarding",
-  "policy_files": [...]  // Optional policy references
-}
+### User Management (Admin)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/users` | List all users |
+| `POST` | `/api/users` | Create new user |
+| `PUT` | `/api/users/:id` | Update user |
+| `DELETE` | `/api/users/:id` | Deactivate user |
+
+### Audit & Monitoring
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/audit-logs` | View system audit logs |
+| `GET` | `/api/health` | Backend health check |
+
+## 🐳 Docker Services
+
+The application runs as a multi-container setup:
+
+| Service | Port | Description |
+|---------|------|-------------|
+| **Frontend** | 3000 | Next.js React application |
+| **Backend** | 8080 | Go API server |
+| **PostgreSQL** | 5433 | Database with persistent storage |
+| **Ollama** | 11434 | AI model server |
+
+### Data Persistence
+- **postgres-data**: Database files and user data
+- **ollama-data**: Downloaded AI models
+- **uploads-data**: Uploaded documents and files
+
+## 👥 User Roles & Permissions
+
+### User (Default)
+- ✅ Access chat interface
+- ✅ Upload and download documents
+- ✅ View own profile
+- ❌ User management
+- ❌ Audit logs
+
+### HR
+- ✅ All User permissions
+- ✅ View all documents
+- ✅ User onboarding assistance
+- ❌ System administration
+
+### IT Security
+- ✅ All HR permissions
+- ✅ Security policy management
+- ✅ Advanced chat features
+- ❌ User account management
+
+### Admin
+- ✅ All permissions
+- ✅ User management (create, update, deactivate)
+- ✅ Audit log access
+- ✅ System monitoring
+
+## 🚀 Development Setup
+
+### Local Development (without Docker)
+
+1. **Prerequisites**:
+   - Node.js 18+
+   - Go 1.24+
+   - PostgreSQL 15+
+
+2. **Database Setup**:
+   ```bash
+   # Create database
+   createdb chatbot_db
+   psql chatbot_db < backend/init-db.sql
+   ```
+
+3. **Backend Setup**:
+   ```bash
+   cd backend
+   go mod tidy
+   
+   # Set environment variables
+   export DB_HOST=localhost
+   export DB_PORT=5432
+   export DB_USER=chatbot_user
+   export DB_PASSWORD=chatbot_password
+   export DB_NAME=chatbot_db
+   
+   go run main.go
+   ```
+
+4. **Frontend Setup**:
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+### Environment Configuration
+
+#### Production Environment Variables (.env)
+```bash
+# Frontend Configuration
+NEXT_PUBLIC_API_URL=http://localhost:8080
+
+# Backend Configuration
+DB_HOST=postgres
+DB_PORT=5432
+DB_USER=chatbot_user
+DB_PASSWORD=chatbot_password
+DB_NAME=chatbot_db
+DB_SSLMODE=disable
+
+# Security
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+
+# AI Configuration
+OLLAMA_HOST=ollama:11434
+
+# Server Configuration
+PORT=8080
 ```
 
 ## 🤖 AI Integration
 
-The chatbot uses a robust three-tier AI system:
+The chatbot uses a robust multi-tier AI system:
 
-1. **Ollama (Primary)**: Llama 3.1 8B model via Google Colab or local deployment
-2. **Hugging Face (Fallback)**: DialoGPT-medium for basic conversations
+1. **Ollama (Primary)**: Llama 3.1 model running in Docker container
+2. **Hugging Face (Fallback)**: Cloud-based inference API
 3. **Mock Responses (Development)**: Predefined responses for offline development
 
-### Built-in Policy Database
-
-The backend includes a comprehensive policy database covering:
-- **Authentication**: Password policies, MFA requirements
-- **Data Protection**: Classification, encryption standards
-- **Remote Work**: VPN usage, device security
-- **Incident Response**: Reporting procedures, escalation matrix
-
-## 🚀 Available Scripts
-
-### Frontend
-```bash
-npm run dev      # Development server with Turbopack
-npm run build    # Production build
-npm run start    # Production server
-npm run lint     # ESLint code quality check
-```
-
-### Backend
-```bash
-go run main.go   # Start development server
-go mod tidy      # Clean up dependencies
-go build         # Build binary
-```
-
-### Docker
-```bash
-docker-compose up --build    # Full stack with Ollama
-docker-compose down          # Stop all services
-```
-
-## 🎨 UI Features
-
-- **Responsive Design**: Optimized for desktop, tablet, and mobile
-- **Modern Typography**: Geist Sans and Geist Mono fonts
-- **Accessible Components**: Built with Radix UI primitives
-- **Smooth Animations**: Tailwind CSS animations
-- **Dark/Light Mode Ready**: CSS variables for theming
-
-## 🔧 Configuration Files
-
-| File | Purpose |
-|------|---------|
-| `next.config.ts` | Next.js framework configuration |
-| `tailwind.config.js` | Tailwind CSS customization |
-| `tsconfig.json` | TypeScript compiler options |
-| `eslint.config.mjs` | Code linting rules |
-| `components.json` | UI component library settings |
-| `postcss.config.mjs` | PostCSS processing |
-
-## 🚀 Deployment
-
-### Frontend Deployment
-Deploy to any of these platforms:
-- **Vercel** (recommended for Next.js)
-- **Netlify**
-- **AWS Amplify**
-- **Any Node.js hosting**
-
-### Backend Deployment
-Deploy using:
-- **Docker containers** (recommended)
-- **Google Cloud Run**
-- **AWS ECS/Fargate**
-- **Traditional VPS**
-
-### Production Environment Variables
-```bash
-# Frontend
-NEXT_PUBLIC_API_URL=https://your-api-domain.com/api
-
-# Backend
-OLLAMA_URL=https://your-ollama-instance.com
-HF_TOKEN=your_production_hf_token
-PORT=8080
-```
+### Document Processing
+- **PDF Text Extraction**: Full-text indexing of PDF documents
+- **Microsoft Office**: DOC and DOCX file processing
+- **Context Integration**: AI responses include relevant document content
+- **Smart Search**: Semantic search across document content
 
 ## 🔒 Security Features
 
-- **Input Validation**: Comprehensive request validation and sanitization
-- **CORS Configuration**: Properly configured cross-origin resource sharing
-- **Environment Variables**: Sensitive data stored in environment variables
-- **Error Handling**: Graceful error handling with fallback responses
-- **Policy Database**: Built-in security policy knowledge base
+### Authentication & Authorization
+- **JWT Tokens**: Secure, stateless authentication
+- **Password Hashing**: bcrypt with salt rounds
+- **Role-Based Access**: Granular permission system
+- **Session Management**: Token refresh and logout
+
+### Data Protection
+- **Input Validation**: Comprehensive request sanitization
+- **File Upload Security**: Type validation, size limits, virus scanning
+- **CORS Configuration**: Secure cross-origin resource sharing
+- **SQL Injection Prevention**: Parameterized queries with GORM
+
+### Audit & Monitoring
+- **Activity Logging**: All user actions tracked
+- **Security Events**: Login attempts, permission changes
+- **System Monitoring**: Health checks and performance metrics
+- **Data Backup**: Automated database and file backups
+
+## 📊 Monitoring & Troubleshooting
+
+### Docker Management
+```bash
+# View service status
+docker-compose ps
+
+# View logs
+docker-compose logs -f [service-name]
+
+# Restart services
+docker-compose restart [service-name]
+
+# Reset everything
+docker-compose down -v
+docker-compose up --build -d
+```
+
+### Health Checks
+```bash
+# Backend health
+curl http://localhost:8080/api/health
+
+# Frontend
+curl http://localhost:3000
+
+# Database connection
+docker-compose exec postgres psql -U chatbot_user -d chatbot_db -c "SELECT 1;"
+```
+
+### Common Issues
+1. **Port conflicts**: Update ports in docker-compose.yml
+2. **Build failures**: Check Docker logs and system requirements
+3. **AI not responding**: Verify Ollama container is running and models are downloaded
+4. **File uploads failing**: Check volume permissions and disk space
+
+## 🚀 Deployment
+
+### Production Deployment
+1. **Update environment variables** for production
+2. **Use strong JWT secrets** and database passwords
+3. **Configure SSL/TLS** with reverse proxy (nginx/traefik)
+4. **Set up monitoring** and logging aggregation
+5. **Configure backups** for database and uploaded files
+
+### Cloud Platforms
+- **AWS**: ECS/Fargate with RDS and S3
+- **Google Cloud**: Cloud Run with Cloud SQL
+- **Azure**: Container Instances with Azure Database
+- **DigitalOcean**: App Platform with Managed Database
+
+## 📄 Documentation
+
+- **[Docker Setup Guide](DOCKER.md)**: Comprehensive Docker documentation
+- **[API Documentation](docs/api.md)**: Complete API reference (if available)
+- **[Deployment Guide](docs/deployment.md)**: Production deployment instructions (if available)
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Make your changes and test thoroughly
+4. Commit with conventional commit messages
+5. Push to your branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
 
 ### Development Guidelines
-- Follow TypeScript best practices
-- Use conventional commit messages
-- Ensure all tests pass
-- Update documentation for new features
+- Follow TypeScript/Go best practices
+- Write tests for new features
+- Update documentation
+- Ensure Docker builds work
+- Test with different user roles
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🆘 Support & Troubleshooting
-
-### Common Issues
-
-**Frontend won't start:**
-- Ensure Node.js 18+ is installed
-- Run `npm install` to install dependencies
-- Check for port conflicts (3000)
-
-**Backend connection errors:**
-- Verify Go 1.23+ is installed
-- Check backend is running on port 8080
-- Verify API URL in frontend configuration
-
-**AI responses not working:**
-- Check environment variables are set
-- Verify Ollama/Colab setup (see setup guide)
-- Check console logs for API errors
+## 🆘 Support
 
 ### Getting Help
-- Check the documentation
-- Review the setup guides in `backend/`
-- Open an issue in the repository
-- Contact your IT team for security-specific questions
+1. Check the [Docker Guide](DOCKER.md) for setup issues
+2. Review logs with `docker-compose logs -f`
+3. Open an issue in the repository
+4. Contact your IT team for security-specific questions
+
+### System Requirements
+- **Minimum**: 4GB RAM, 2 CPU cores, 10GB disk space
+- **Recommended**: 8GB RAM, 4 CPU cores, 50GB disk space
+- **Docker**: Version 20.10+ with Compose V2
 
 ---
 
-**Note**: This chatbot is designed to assist with IT security policies and onboarding. For critical security decisions, always consult with your organization's IT security team.
+**Note**: This platform is designed for IT security policy management and user onboarding. For critical security decisions, always consult with your organization's IT security team.
+
+Built with ❤️ using Next.js, Go, and Docker.
