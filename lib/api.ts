@@ -10,7 +10,7 @@ import {
 } from './types';
 
 // Use environment variable for API URL, fallback to localhost for development
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 // Helper function to get authentication headers
 function getAuthHeaders(): Record<string, string> {
@@ -28,7 +28,7 @@ function getAuthHeaders(): Record<string, string> {
 }
 
 export async function sendChatMessage(request: ChatRequest): Promise<ChatResponse> {
-  const response = await fetch(`${API_BASE_URL}/chat`, {
+  const response = await fetch(`${API_BASE_URL}/api/chat`, {
     method: 'POST',
     headers: getAuthHeaders(),
     body: JSON.stringify(request),
@@ -43,7 +43,7 @@ export async function sendChatMessage(request: ChatRequest): Promise<ChatRespons
 }
 
 export async function getAllPolicies(): Promise<PolicyFile[]> {
-  const response = await fetch(`${API_BASE_URL}/policies`, {
+  const response = await fetch(`${API_BASE_URL}/api/policies`, {
     headers: getAuthHeaders(),
   });
 
@@ -56,7 +56,7 @@ export async function getAllPolicies(): Promise<PolicyFile[]> {
 }
 
 export async function checkHealth(): Promise<{ status: string }> {
-  const response = await fetch(`${API_BASE_URL}/health`);
+  const response = await fetch(`${API_BASE_URL}/api/health`);
 
   if (!response.ok) {
     const errorText = await response.text();
@@ -79,7 +79,7 @@ export async function getAllDocuments(params?: {
   if (params?.category) searchParams.append('category', params.category);
   if (params?.active !== undefined) searchParams.append('active', params.active.toString());
 
-  const url = `${API_BASE_URL}/documents${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
+  const url = `${API_BASE_URL}/api/documents${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
   const response = await fetch(url, {
     headers: getAuthHeaders(),
   });
@@ -93,7 +93,7 @@ export async function getAllDocuments(params?: {
 }
 
 export async function getDocumentById(id: number): Promise<PolicyFile> {
-  const response = await fetch(`${API_BASE_URL}/documents/${id}`, {
+  const response = await fetch(`${API_BASE_URL}/api/documents/${id}`, {
     headers: getAuthHeaders(),
   });
 
@@ -106,7 +106,7 @@ export async function getDocumentById(id: number): Promise<PolicyFile> {
 }
 
 export async function createDocument(document: CreateDocumentRequest): Promise<PolicyFile> {
-  const response = await fetch(`${API_BASE_URL}/documents`, {
+  const response = await fetch(`${API_BASE_URL}/api/documents`, {
     method: 'POST',
     headers: getAuthHeaders(),
     body: JSON.stringify(document),
@@ -121,7 +121,7 @@ export async function createDocument(document: CreateDocumentRequest): Promise<P
 }
 
 export async function updateDocument(id: number, updates: UpdateDocumentRequest): Promise<PolicyFile> {
-  const response = await fetch(`${API_BASE_URL}/documents/${id}`, {
+  const response = await fetch(`${API_BASE_URL}/api/documents/${id}`, {
     method: 'PUT',
     headers: getAuthHeaders(),
     body: JSON.stringify(updates),
@@ -136,7 +136,7 @@ export async function updateDocument(id: number, updates: UpdateDocumentRequest)
 }
 
 export async function deleteDocument(id: number): Promise<{ message: string }> {
-  const response = await fetch(`${API_BASE_URL}/documents/${id}`, {
+  const response = await fetch(`${API_BASE_URL}/api/documents/${id}`, {
     method: 'DELETE',
     headers: getAuthHeaders(),
   });
@@ -150,7 +150,7 @@ export async function deleteDocument(id: number): Promise<{ message: string }> {
 }
 
 export async function downloadDocument(id: number): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/documents/${id}/download`, {
+  const response = await fetch(`${API_BASE_URL}/api/documents/${id}/download`, {
     headers: getAuthHeaders(),
   });
 
@@ -246,7 +246,7 @@ export async function searchDocuments(params: DocumentSearchParams): Promise<Doc
   if (params.type) searchParams.append('type', params.type);
   if (params.category) searchParams.append('category', params.category);
 
-  const response = await fetch(`${API_BASE_URL}/documents/search?${searchParams.toString()}`, {
+  const response = await fetch(`${API_BASE_URL}/api/documents/search?${searchParams.toString()}`, {
     headers: getAuthHeaders(),
   });
 
@@ -292,7 +292,7 @@ export interface User {
 }
 
 export async function getAllUsers(): Promise<User[]> {
-  const response = await fetch(`${API_BASE_URL}/users`, {
+  const response = await fetch(`${API_BASE_URL}/api/users`, {
     headers: getAuthHeaders(),
   });
 
@@ -311,7 +311,7 @@ export async function updateUser(id: number, updates: {
   email?: string;
   is_active?: boolean;
 }): Promise<User> {
-  const response = await fetch(`${API_BASE_URL}/users/${id}`, {
+  const response = await fetch(`${API_BASE_URL}/api/users/${id}`, {
     method: 'PUT',
     headers: getAuthHeaders(),
     body: JSON.stringify(updates),
@@ -327,7 +327,7 @@ export async function updateUser(id: number, updates: {
 }
 
 export async function updateUserRole(id: number, role: string): Promise<User> {
-  const response = await fetch(`${API_BASE_URL}/users/${id}/role`, {
+  const response = await fetch(`${API_BASE_URL}/api/users/${id}/role`, {
     method: 'PUT',
     headers: getAuthHeaders(),
     body: JSON.stringify({ role }),
@@ -343,7 +343,7 @@ export async function updateUserRole(id: number, role: string): Promise<User> {
 }
 
 export async function deleteUser(id: number): Promise<{ message: string }> {
-  const response = await fetch(`${API_BASE_URL}/users/${id}`, {
+  const response = await fetch(`${API_BASE_URL}/api/users/${id}`, {
     method: 'DELETE',
     headers: getAuthHeaders(),
   });
@@ -403,7 +403,7 @@ export async function getAuditLogs(filters?: AuditLogFilter): Promise<AuditLogRe
   if (filters?.from) searchParams.append('from', filters.from);
   if (filters?.to) searchParams.append('to', filters.to);
 
-  const url = `${API_BASE_URL}/audit-logs${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
+  const url = `${API_BASE_URL}/api/audit-logs${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
   const response = await fetch(url, {
     headers: getAuthHeaders(),
   });
@@ -455,7 +455,7 @@ export async function uploadFile(file: File): Promise<FileUploadResponse> {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}/upload`, {
+  const response = await fetch(`${API_BASE_URL}/api/upload`, {
     method: 'POST',
     headers,
     body: formData,
@@ -471,7 +471,7 @@ export async function uploadFile(file: File): Promise<FileUploadResponse> {
 
 // Get supported file types
 export async function getSupportedFileTypes(): Promise<SupportedFileTypesResponse> {
-  const response = await fetch(`${API_BASE_URL}/upload/supported-types`, {
+  const response = await fetch(`${API_BASE_URL}/api/upload/supported-types`, {
     method: 'GET',
     headers: getAuthHeaders(),
   });

@@ -1530,11 +1530,20 @@ func main() {
 
 	// CORS configuration
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{
+	
+	// Default allowed origins for development
+	allowedOrigins := []string{
 		"http://localhost:3000",     // Development frontend
 		"http://frontend:3000",      // Docker container frontend
 		"http://127.0.0.1:3000",     // Alternative localhost
 	}
+	
+	// Add production frontend URL if specified
+	if frontendURL := getEnv("FRONTEND_URL", ""); frontendURL != "" {
+		allowedOrigins = append(allowedOrigins, frontendURL)
+	}
+	
+	config.AllowOrigins = allowedOrigins
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
 	config.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization"}
 	config.ExposeHeaders = []string{"Content-Disposition", "Content-Type", "Content-Length"}

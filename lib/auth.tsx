@@ -2,6 +2,9 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
+// API Base URL - same logic as api.ts
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+
 // Types
 export interface User {
   id: number
@@ -62,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           const user = JSON.parse(userData)
           
           // Verify token is still valid by calling profile endpoint
-          const response = await fetch('http://localhost:8080/api/profile', {
+          const response = await fetch(`${API_BASE_URL}/api/profile`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
@@ -112,7 +115,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (username: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
-      const response = await fetch('http://localhost:8080/api/auth/login', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -149,7 +152,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = async (data: RegisterData): Promise<{ success: boolean; error?: string }> => {
     try {
-      const response = await fetch('http://localhost:8080/api/auth/register', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -201,7 +204,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const response = await fetch('http://localhost:8080/api/profile', {
+      const response = await fetch(`${API_BASE_URL}/api/profile`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${authState.token}`,
@@ -240,7 +243,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const response = await fetch('http://localhost:8080/api/change-password', {
+      const response = await fetch(`${API_BASE_URL}/api/change-password`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${authState.token}`,

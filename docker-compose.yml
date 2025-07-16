@@ -32,6 +32,7 @@ services:
       - PORT=8080
       - JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
       - AI_ENABLED=false  # Set to true to enable AI features
+      - FRONTEND_URL=http://localhost:3000
     volumes:
       - uploads-data:/app/uploads
     depends_on:
