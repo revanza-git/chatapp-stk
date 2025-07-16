@@ -2,7 +2,7 @@
 
 A comprehensive, AI-powered platform designed to help organizations manage IT security policies, user onboarding, and document management. Built with Next.js 15, React 19, TypeScript for the frontend and Go with Gin for the backend, fully containerized with Docker.
 
-🌟 **NEW**: Deploy to the cloud for **FREE** with Railway, Render, or Fly.io! See [Cloud Deployment Guide](DEPLOYMENT.md) for details.
+🌟 **NEW**: Deploy to the cloud for **FREE** with Railway! See [Cloud Deployment Guide](DEPLOYMENT.md) for details.
 
 ## 🚀 Features
 
@@ -400,7 +400,7 @@ The application runs as a multi-container setup:
 
 ### Environment Configuration
 
-#### Production Environment Variables (.env)
+#### Local Development Environment (.env)
 ```bash
 # Frontend Configuration
 NEXT_PUBLIC_API_URL=http://localhost:8080
@@ -416,11 +416,42 @@ DB_SSLMODE=disable
 # Security
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 
-# AI Configuration
+# AI Configuration (optional)
+AI_ENABLED=false
 OLLAMA_HOST=ollama:11434
+HF_TOKEN=your-hugging-face-token-here
 
 # Server Configuration
 PORT=8080
+```
+
+#### Cloud Deployment Environment Variables
+For cloud platforms like Railway, set these environment variables directly in your platform's dashboard:
+
+**Frontend Service:**
+```bash
+NEXT_PUBLIC_API_URL=https://your-backend-url.railway.app
+NODE_ENV=production
+```
+
+**Backend Service:**
+```bash
+# Database (automatically provided by Railway PostgreSQL)
+DATABASE_URL=postgresql://username:password@host:port/database
+
+# Security (generate secure values)
+JWT_SECRET=your-super-secure-random-jwt-secret-minimum-32-characters
+
+# AI Configuration
+AI_ENABLED=false
+OLLAMA_HOST=
+HF_TOKEN=
+
+# Server
+PORT=8080
+
+# CORS
+FRONTEND_URL=https://your-frontend-url.railway.app
 ```
 
 ## 🤖 AI Integration
@@ -457,7 +488,7 @@ The chatbot uses a robust multi-tier AI system:
 - **System Monitoring**: Health checks and performance metrics
 - **Data Backup**: Automated database and file backups
 
-## 📊 Monitoring & Troubleshooting
+## 🚀 Local Development with Docker
 
 ### Docker Management
 ```bash
@@ -487,72 +518,109 @@ curl http://localhost:3000
 docker-compose exec postgres psql -U chatbot_user -d chatbot_db -c "SELECT 1;"
 ```
 
-### Common Issues
-1. **Port conflicts**: Update ports in docker-compose.yml
-2. **Build failures**: Check Docker logs and system requirements
-3. **AI not responding**: Verify Ollama container is running and models are downloaded
-4. **File uploads failing**: Check volume permissions and disk space
-
 ## ☁️ Cloud Deployment (FREE)
 
-Deploy your application to the cloud for **FREE** using Docker! We've optimized the setup for free tier hosting:
+Deploy your application to Railway for **FREE**! The platform is optimized for cloud deployment with automatic scaling and SSL certificates.
 
-### 🏆 **Recommended Free Platforms:**
+### 🚀 **Quick Deploy with Railway (Recommended)**
 
-| Platform | Free Tier | Best For | Database | Setup Difficulty |
-|----------|-----------|----------|----------|------------------|
-| **Railway** ⭐ | $5 credits/month | Docker apps | PostgreSQL included | ⭐ Easy |
-| **Render** | 750hrs/service | Multiple services | 90 days free | ⭐⭐ Medium |
-| **Fly.io** | 3 shared VMs | Performance | Paid after limit | ⭐⭐⭐ Advanced |
+#### Prerequisites
+- GitHub account with your code pushed
+- Railway account (free signup)
 
-### 🚀 **Quick Deploy with Railway (Recommended)**:
-1. **Push to GitHub**: `git push origin main`
-2. **Sign up**: [railway.app](https://railway.app) 
-3. **Connect repository**: Railway auto-detects Docker setup
-4. **Configure environment**:
+#### Deployment Steps
+1. **Push your code to GitHub**:
+   ```bash
+   git add .
+   git commit -m "Ready for Railway deployment"
+   git push origin main
+   ```
+
+2. **Deploy on Railway**:
+   - Visit [railway.app](https://railway.app) and sign up
+   - Click "New Project" → "Deploy from GitHub repo"
+   - Select your repository
+   - Railway will automatically detect your Docker setup
+
+3. **Configure Services**:
+   Railway will create two services:
+   - **Frontend**: Next.js application
+   - **Backend**: Go API server
+   - **Database**: PostgreSQL (automatically provisioned)
+
+4. **Set Environment Variables**:
+   
+   **Frontend Service Variables:**
+   ```env
+   NEXT_PUBLIC_API_URL=https://your-backend-service.railway.app
+   NODE_ENV=production
+   ```
+   
+   **Backend Service Variables:**
    ```env
    JWT_SECRET=VElJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUk=
    AI_ENABLED=false
-   NODE_ENV=production
+   FRONTEND_URL=https://your-frontend-service.railway.app
+   PORT=8080
    ```
-5. **Deploy**: One-click deployment! 🎉
 
-### 📁 **Cloud Deployment Files:**
-- **[DEPLOYMENT.md](DEPLOYMENT.md)**: Complete step-by-step guide for all platforms
-- **[.env.production](.env.production)**: Production environment template
-- **[railway.json](railway.json)**: Railway platform configuration
-- **[render.yaml](render.yaml)**: Render platform configuration
+5. **Deploy**: Railway automatically builds and deploys! 🎉
 
-### 🛡️ **Free Tier Optimizations:**
-- ✅ **AI Disabled by default**: Saves compute resources
-- ✅ **Efficient containers**: Multi-stage Docker builds
-- ✅ **Database included**: PostgreSQL on most platforms
-- ✅ **SSL/HTTPS**: Automatic certificates
-- ✅ **Auto-scaling**: Handles traffic spikes
+#### After Deployment
+- Your frontend will be available at: `https://your-frontend-service.railway.app`
+- Your backend API will be at: `https://your-backend-service.railway.app`
+- Database is automatically connected and managed
+
+### 🔧 **Alternative Cloud Platforms**
+
+| Platform | Free Tier | Database | Difficulty | Best For |
+|----------|-----------|----------|------------|----------|
+| **Railway** ⭐ | $5 credits/month | PostgreSQL included | ⭐ Easy | Docker apps |
+| **Render** | 750hrs/service | 90 days free | ⭐⭐ Medium | Multiple services |
+| **Fly.io** | 3 shared VMs | Paid after limit | ⭐⭐⭐ Advanced | Performance |
+
+### 🛡️ **Cloud Optimizations**
+- ✅ **AI Disabled by default**: Saves compute resources for free tier
+- ✅ **Multi-stage Docker builds**: Efficient containers
+- ✅ **Automatic SSL/HTTPS**: Secure connections included
+- ✅ **Database included**: PostgreSQL automatically provisioned
+- ✅ **Auto-scaling**: Handles traffic spikes automatically
 
 **📖 For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md)**
 
-## 🚀 Local Deployment
+## 🛠️ Troubleshooting
 
-### Production Deployment (Local/VPS)
-1. **Update environment variables** for production
-2. **Use strong JWT secrets** and database passwords
-3. **Configure SSL/TLS** with reverse proxy (nginx/traefik)
-4. **Set up monitoring** and logging aggregation
-5. **Configure backups** for database and uploaded files
+### Common Issues
 
-### Enterprise Cloud Platforms
-- **AWS**: ECS/Fargate with RDS and S3
-- **Google Cloud**: Cloud Run with Cloud SQL
-- **Azure**: Container Instances with Azure Database
-- **DigitalOcean**: App Platform with Managed Database
+#### Local Development
+1. **Port conflicts**: Update ports in docker-compose.yml
+2. **Build failures**: Check Docker logs with `docker-compose logs -f`
+3. **Database connection**: Verify PostgreSQL container is running
+4. **File uploads failing**: Check volume permissions and disk space
+
+#### Cloud Deployment
+1. **Frontend calling localhost**: Ensure `NEXT_PUBLIC_API_URL` is set correctly in cloud platform
+2. **Authentication errors**: Verify `JWT_SECRET` is set and matches between frontend/backend
+3. **CORS issues**: Ensure `FRONTEND_URL` is set in backend environment variables
+4. **Database connection**: Check if DATABASE_URL is automatically provided by your cloud platform
+
+### Debug Commands
+```bash
+# Local development
+docker-compose logs -f [service-name]
+docker-compose ps
+curl http://localhost:8080/api/health
+
+# Check environment variables (local)
+docker-compose exec frontend printenv | grep NEXT_PUBLIC
+docker-compose exec backend printenv | grep JWT_SECRET
+```
 
 ## 📄 Documentation
 
 - **[Docker Setup Guide](DOCKER.md)**: Comprehensive Docker documentation
-- **[Cloud Deployment Guide](DEPLOYMENT.md)**: Free cloud hosting deployment instructions  
-- **[API Documentation](docs/api.md)**: Complete API reference (if available)
-- **[Production Environment](.env.production)**: Cloud deployment environment template
+- **[Cloud Deployment Guide](DEPLOYMENT.md)**: Railway and other cloud platform deployment
+- **Environment Setup**: Use `.env.example` as template for local development
 
 ## 🤝 Contributing
 
@@ -589,8 +657,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-**Note**: This platform is designed for IT security policy management and user onboarding. For critical security decisions, always consult with your organization's IT security team.
+**Note**: This platform is designed for IT security policy management and user onboarding. For production deployments, always use secure JWT secrets and follow your organization's security guidelines.
 
-Built with ❤️ using Next.js, Go, and Docker.
-#   R a i l w a y   r e d e p l o y   t r i g g e r  
- 
+Built with ❤️ using Next.js, Go, and Docker. Optimized for Railway deployment.
+
+# Railway redeploy trigger
