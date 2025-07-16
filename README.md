@@ -592,3 +592,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 **Note**: This platform is designed for IT security policy management and user onboarding. For critical security decisions, always consult with your organization's IT security team.
 
 Built with ❤️ using Next.js, Go, and Docker.
+#   R a i l w a y   r e d e p l o y   t r i g g e r  
+ 
