@@ -1045,6 +1045,13 @@ func callHuggingFaceAPI(prompt string) (string, error) {
 
 // Smart LLM caller that tries Ollama first, then HF, then mock
 func callLLM(prompt string) string {
+	// Check if AI features are enabled
+	aiEnabled := os.Getenv("AI_ENABLED")
+	if aiEnabled != "true" {
+		log.Println("🤖 AI features disabled, using mock responses")
+		return generateMockLLMResponse(prompt)
+	}
+
 	// Try Ollama first (Google Colab)
 	if response, err := callOllamaAPI(prompt); err == nil {
 		log.Println("✅ Using Ollama API from Google Colab")

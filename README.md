@@ -318,7 +318,14 @@ The application runs as a multi-container setup:
 | **Frontend** | 3000 | Next.js React application |
 | **Backend** | 8080 | Go API server |
 | **PostgreSQL** | 5433 | Database with persistent storage |
-| **Ollama** | 11434 | AI model server |
+| **Ollama** | 11434 | AI model server (DISABLED by default) |
+
+### ⚡ AI Features Status
+**AI features are currently DISABLED** for faster deployment and cloud hosting compatibility:
+- ✅ **Chat Interface**: Works with intelligent mock responses
+- ✅ **Document Management**: Full functionality available  
+- ✅ **User Authentication**: Complete system operational
+- 🔄 **AI Integration**: Can be enabled when needed (see DOCKER.md)
 
 ### Data Persistence
 - **postgres-data**: Database files and user data

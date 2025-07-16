@@ -31,13 +31,13 @@ services:
       - DB_SSLMODE=disable
       - PORT=8080
       - JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+      - AI_ENABLED=false  # Set to true to enable AI features
     volumes:
       - uploads-data:/app/uploads
     depends_on:
       postgres:
         condition: service_healthy
-      ollama:
-        condition: service_started
+      # Removed ollama dependency since AI is disabled
     networks:
       - chatapp-network
     restart: unless-stopped
@@ -63,26 +63,30 @@ services:
       timeout: 5s
       retries: 5
 
-  # Ollama service for LLM
-  ollama:
-    image: ollama/ollama:latest
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama-data:/root/.ollama
-    environment:
-      - OLLAMA_MODELS=/root/.ollama/models
-    networks:
-      - chatapp-network
-    restart: unless-stopped
-    # For GPU support (uncomment if you have NVIDIA GPU)
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - driver: nvidia
-    #           count: 1
-    #           capabilities: [gpu]
+  # Ollama service for LLM (DISABLED - uncomment to enable AI features)
+  # To enable AI: 
+  # 1. Uncomment the ollama service below
+  # 2. Add ollama dependency back to backend service
+  # 3. Set AI_ENABLED=true in backend environment
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ollama-data:/root/.ollama
+  #   environment:
+  #     - OLLAMA_MODELS=/root/.ollama/models
+  #   networks:
+  #     - chatapp-network
+  #   restart: unless-stopped
+  #   # For GPU support (uncomment if you have NVIDIA GPU)
+  #   # deploy:
+  #   #   resources:
+  #   #     reservations:
+  #   #       devices:
+  #   #         - driver: nvidia
+  #   #           count: 1
+  #   #           capabilities: [gpu]
 
 volumes:
   ollama-data:

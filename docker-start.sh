@@ -23,17 +23,18 @@ docker-compose up --build -d
 echo "⏳ Waiting for services to start..."
 sleep 10
 
-# Pull Ollama model
-echo "📥 Setting up Ollama model..."
-docker-compose exec ollama ollama pull llama2 || echo "⚠️  Failed to pull model. You can do this manually later."
+# Skip Ollama model setup since AI is disabled
+echo "ℹ️  AI features are currently disabled for faster deployment"
+echo "💡 To enable AI: Edit docker-compose.yml and set AI_ENABLED=true"
 
 echo "✅ Setup complete!"
 echo ""
 echo "🌐 Frontend: http://localhost:3000"
 echo "🔧 Backend API: http://localhost:8080"
 echo "🗄️  Database: localhost:5433"
-echo "🤖 Ollama: http://localhost:11434"
+echo "🤖 AI Status: DISABLED (for faster deployment)"
 echo ""
 echo "📊 To view logs: docker-compose logs -f"
 echo "🛑 To stop: docker-compose down"
-echo "🔄 To restart: docker-compose restart" 
+echo "🔄 To restart: docker-compose restart"
+echo "🤖 To enable AI: See DOCKER.md for instructions" 

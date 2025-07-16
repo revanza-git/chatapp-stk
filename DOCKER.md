@@ -58,7 +58,91 @@ The Docker setup includes the following services:
 | **Frontend** | 3000 | Next.js React application |
 | **Backend** | 8080 | Go API server |
 | **PostgreSQL** | 5433 | Database |
-| **Ollama** | 11434 | Language model server |
+| **Ollama** | 11434 | Language model server (DISABLED by default) |
+
+## 🤖 AI Features Configuration
+
+**AI features are DISABLED by default** for faster deployment and reduced resource usage. The application works fully without AI using intelligent mock responses.
+
+### Current Status: AI Disabled ❌
+- ✅ **Chat Interface**: Available with smart mock responses
+- ✅ **Document Management**: Full functionality
+- ✅ **User Authentication**: Complete system
+- ❌ **AI-Powered Responses**: Disabled (uses mock responses)
+
+### To Enable AI Features:
+
+1. **Edit `docker-compose.yml`**:
+   ```yaml
+   # Uncomment the ollama service (lines 67-85)
+   ollama:
+     image: ollama/ollama:latest
+     ports:
+       - "11434:11434"
+     # ... rest of configuration
+   
+   # Add ollama dependency back to backend service
+   backend:
+     depends_on:
+       postgres:
+         condition: service_healthy
+       ollama:
+         condition: service_started
+   ```
+
+2. **Update environment variables**:
+   ```bash
+   # In .env or docker-compose.yml
+   AI_ENABLED=true
+   ```
+
+3. **Restart services**:
+   ```bash
+   docker-compose down
+   docker-compose up --build -d
+   ```
+
+4. **Download AI model** (optional):
+   ```bash
+   docker-compose exec ollama ollama pull llama2
+   ```
+
+### To Disable AI Features:
+1. Set `AI_ENABLED=false` in environment
+2. Comment out ollama service in docker-compose.yml
+3. Restart: `docker-compose up --build -d`
+
+### 🛠️ Quick AI Toggle (Automated)
+
+Use the included scripts for easy AI feature management:
+
+#### Linux/macOS:
+```bash
+# Check current status
+./toggle-ai.sh status
+
+# Enable AI features
+./toggle-ai.sh enable
+docker-compose up --build -d
+
+# Disable AI features  
+./toggle-ai.sh disable
+docker-compose up --build -d
+```
+
+#### Windows:
+```cmd
+# Check current status
+toggle-ai.bat status
+
+# Enable AI features
+toggle-ai.bat enable
+docker-compose up --build -d
+
+# Disable AI features
+toggle-ai.bat disable
+docker-compose up --build -d
+```
 
 ## Usage
 
@@ -67,7 +151,7 @@ Once all services are running:
 1. **Frontend**: Visit http://localhost:3000
 2. **Backend API**: Available at http://localhost:8080
 3. **Database**: Connect to `localhost:5433` with credentials from `.env`
-4. **Ollama**: API available at http://localhost:11434
+4. **AI Status**: Check startup logs or set `AI_ENABLED=true` to enable
 
 ## Development
 
