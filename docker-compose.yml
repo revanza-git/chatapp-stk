@@ -8,7 +8,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=http://localhost:8080
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8080}
     depends_on:
       - backend
     networks:
@@ -32,7 +32,7 @@ services:
       - PORT=8080
       - JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
       - AI_ENABLED=false  # Set to true to enable AI features
-      - FRONTEND_URL=http://localhost:3000
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
     volumes:
       - uploads-data:/app/uploads
     depends_on:
