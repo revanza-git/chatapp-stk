@@ -6,261 +6,307 @@ A modern, AI-powered chatbot application designed to help users navigate IT secu
 
 - **Security Onboarding Assistance**: Get guided help with security awareness topics including passwords, VPN setup, email security, and data protection policies
 - **Policy Search**: Quickly find and access specific security policies, procedures, and guidelines relevant to your role
-- **Instant Answers**: Get immediate responses with relevant policy documents, best practices, and actionable security guidance
+- **Intelligent Chat Modes**: Choose between "Security Onboarding" and "Policy Search" for targeted assistance
 - **AI-Powered Responses**: Uses Ollama (Llama 3.1) or Hugging Face APIs for intelligent, context-aware responses
-- **Modern UI**: Beautiful, responsive interface built with Tailwind CSS and Radix UI components
-- **Real-time Chat**: Interactive chat interface for seamless user experience
+- **Modern UI**: Beautiful, responsive interface built with Tailwind CSS v4 and Radix UI components
+- **Real-time Chat**: Interactive chat interface with message history and typing indicators
+- **Robust Fallback System**: Automatic fallback from Ollama → Hugging Face → Mock responses
 
 ## 🛠️ Technology Stack
 
 ### Frontend
-
 - **Framework**: Next.js 15 with App Router
-- **Language**: TypeScript
+- **Language**: TypeScript 5
 - **Styling**: Tailwind CSS v4
-- **UI Components**: Radix UI + Custom components
-- **State Management**: TanStack React Query
+- **UI Components**: Radix UI primitives with custom styling
+- **State Management**: TanStack React Query v5
 - **Icons**: Lucide React
-- **Development**: ESLint, Turbopack
+- **Development**: ESLint 9, Turbopack
 
 ### Backend
-
-- **Language**: Go
+- **Language**: Go 1.23+
 - **Framework**: Gin (HTTP web framework)
-- **AI Integration**: Ollama API + Hugging Face API
-- **CORS**: Enabled for frontend integration
-- **Docker**: Containerized deployment
+- **AI Integration**: 
+  - Ollama API (via Google Colab or local)
+  - Hugging Face Inference API (DialoGPT-medium)
+  - Mock responses for development
+- **CORS**: Configured for cross-origin requests
+- **Docker**: Full containerization support
 
 ## 📦 Installation & Setup
 
 ### Prerequisites
-
 - Node.js 18+
-- Go 1.21+
+- Go 1.23+
 - Docker (optional)
 
-### Frontend Setup
+### Quick Start
 
-1. Clone the repository:
-
+1. **Clone the repository**:
 ```bash
 git clone <repository-url>
-cd chatbotawareness
+cd chatapp-stk
 ```
 
-2. Install frontend dependencies:
-
+2. **Install frontend dependencies**:
 ```bash
 npm install
 ```
 
-3. Set up environment variables (optional):
-
-For production deployments, you can set these environment variables:
-
-**Frontend (.env.local):**
-
-```bash
-NEXT_PUBLIC_API_URL=http://localhost:8080/api
-```
-
-**Backend (system environment or .env file):**
-
-```bash
-OLLAMA_URL=http://your-ollama-server:11434
-HF_TOKEN=your_hugging_face_token
-```
-
-4. Run the frontend development server:
-
+3. **Start the frontend** (in one terminal):
 ```bash
 npm run dev
 ```
 
-The frontend will be available at [http://localhost:3000](http://localhost:3000)
-
-### Backend Setup
-
-1. Navigate to the backend directory:
-
+4. **Start the backend** (in another terminal):
 ```bash
 cd backend
-```
-
-2. Install Go dependencies:
-
-```bash
 go mod tidy
-```
-
-3. Set up environment variables (optional):
-
-```bash
-# For Ollama integration (preferred)
-export OLLAMA_URL=http://your-ollama-server:11434
-
-# For Hugging Face fallback
-export HF_TOKEN=your_hugging_face_token
-```
-
-4. Run the backend server:
-
-```bash
 go run main.go
 ```
 
-The backend API will be available at [http://localhost:8080](http://localhost:8080)
+The application will be available at:
+- Frontend: [http://localhost:3000](http://localhost:3000)
+- Backend API: [http://localhost:8080](http://localhost:8080)
 
-### Docker Setup (Alternative)
+### Environment Configuration
 
-You can also run the backend using Docker:
+#### Frontend (.env.local)
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:8080/api
+```
 
+#### Backend Environment Variables
+```bash
+# Primary AI Backend (Ollama via Google Colab)
+OLLAMA_URL=https://your-ngrok-url.ngrok.io
+
+# Fallback AI Backend (Hugging Face)
+HF_TOKEN=hf_your_hugging_face_token_here
+```
+
+### AI Backend Setup
+
+#### Option 1: Google Colab + Ollama (Recommended)
+1. Upload `backend/colab_ollama_setup.ipynb` to Google Colab
+2. Run all cells to setup Ollama with Llama 3.1
+3. Copy the ngrok URL and set it as `OLLAMA_URL`
+
+See `backend/setup_colab_integration.md` for detailed instructions.
+
+#### Option 2: Local Docker Setup
 ```bash
 cd backend
 docker-compose up --build
 ```
 
+#### Option 3: Hugging Face Only
+Set only the `HF_TOKEN` environment variable.
+
 ## 🏗️ Project Structure
 
 ```
-├── app/                    # Next.js App Router pages
-│   ├── layout.tsx         # Root layout component
-│   ├── page.tsx           # Home page with chat interface
-│   ├── providers.tsx      # React Query and other providers
-│   └── globals.css        # Global styles
-├── components/            # Reusable React components
-│   ├── chatbot/          # Chatbot-specific components
-│   │   ├── ChatInterface.tsx
-│   │   └── ChatMessage.tsx
-│   └── ui/               # UI components (cards, buttons, etc.)
-├── lib/                  # Utility functions and configurations
-├── public/               # Static assets
-├── backend/              # Go backend server
-│   ├── main.go          # Main server file with API endpoints
-│   ├── go.mod           # Go module dependencies
-│   ├── Dockerfile       # Docker container configuration
-│   ├── docker-compose.yml
-│   └── setup_colab_integration.md
-└── package.json         # Frontend dependencies
+chatapp-stk/
+├── app/                          # Next.js App Router
+│   ├── layout.tsx               # Root layout with providers
+│   ├── page.tsx                 # Main chat page
+│   ├── providers.tsx            # React Query provider
+│   └── globals.css              # Global Tailwind styles
+│
+├── components/                   # React components
+│   ├── chatbot/
+│   │   ├── ChatInterface.tsx    # Main chat component
+│   │   └── ChatMessage.tsx      # Individual message component
+│   └── ui/                      # Reusable UI components
+│       ├── badge.tsx
+│       ├── button.tsx
+│       ├── card.tsx
+│       ├── dialog.tsx
+│       ├── input.tsx
+│       ├── scroll-area.tsx
+│       └── separator.tsx
+│
+├── lib/                         # Utility libraries
+│   ├── api.ts                   # API client functions
+│   ├── types.ts                 # TypeScript type definitions
+│   └── utils.ts                 # Utility functions
+│
+├── backend/                     # Go backend server
+│   ├── main.go                  # Main server with API endpoints
+│   ├── go.mod                   # Go dependencies
+│   ├── go.sum                   # Go dependency checksums
+│   ├── Dockerfile               # Container configuration
+│   ├── docker-compose.yml       # Multi-service setup
+│   ├── colab_ollama_setup.ipynb # Google Colab setup notebook
+│   └── setup_colab_integration.md # Setup documentation
+│
+└── Configuration files
+    ├── next.config.ts           # Next.js configuration
+    ├── package.json             # Frontend dependencies
+    ├── tsconfig.json            # TypeScript configuration
+    ├── components.json          # UI components config
+    └── postcss.config.mjs       # PostCSS configuration
 ```
 
 ## 🔌 API Endpoints
 
 ### Backend API (Port 8080)
 
-- `POST /api/chat` - Main chat endpoint
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/chat` | Send chat message and get AI response |
+| `GET` | `/api/policies` | Retrieve all available security policies |
+| `GET` | `/health` | Backend health check |
 
-  - Body: `{"message": "string", "type": "onboarding|policy_search"}`
-  - Response: `{"response": "string", "type": "string", "policy_files": [...]}`
+#### Chat API Request/Response
+```typescript
+// Request
+{
+  "message": "What is our password policy?",
+  "type": "onboarding" | "policy_search"
+}
 
-- `GET /api/policies` - Get all available policies
-
-  - Response: Array of policy objects
-
-- `GET /health` - Health check endpoint
+// Response
+{
+  "response": "Password policy details...",
+  "type": "onboarding",
+  "policy_files": [...]  // Optional policy references
+}
+```
 
 ## 🤖 AI Integration
 
-The chatbot supports multiple AI backends:
+The chatbot uses a robust three-tier AI system:
 
-1. **Ollama (Preferred)**: Local Llama 3.1 model via Google Colab or local setup
-2. **Hugging Face API**: Fallback using DialoGPT model
-3. **Mock Responses**: Default fallback for development
+1. **Ollama (Primary)**: Llama 3.1 8B model via Google Colab or local deployment
+2. **Hugging Face (Fallback)**: DialoGPT-medium for basic conversations
+3. **Mock Responses (Development)**: Predefined responses for offline development
 
-### Setting up Ollama
+### Built-in Policy Database
 
-See `backend/setup_colab_integration.md` for detailed instructions on setting up Ollama with Google Colab.
+The backend includes a comprehensive policy database covering:
+- **Authentication**: Password policies, MFA requirements
+- **Data Protection**: Classification, encryption standards
+- **Remote Work**: VPN usage, device security
+- **Incident Response**: Reporting procedures, escalation matrix
 
 ## 🚀 Available Scripts
 
 ### Frontend
-
-- `npm run dev` - Start development server with Turbopack
-- `npm run build` - Build the application for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint for code quality
+```bash
+npm run dev      # Development server with Turbopack
+npm run build    # Production build
+npm run start    # Production server
+npm run lint     # ESLint code quality check
+```
 
 ### Backend
+```bash
+go run main.go   # Start development server
+go mod tidy      # Clean up dependencies
+go build         # Build binary
+```
 
-- `go run main.go` - Start the Go server
-- `go mod tidy` - Clean up dependencies
-- `docker-compose up` - Run with Docker
+### Docker
+```bash
+docker-compose up --build    # Full stack with Ollama
+docker-compose down          # Stop all services
+```
 
-## 🎨 UI Components
+## 🎨 UI Features
 
-The application uses a custom UI component library built with:
+- **Responsive Design**: Optimized for desktop, tablet, and mobile
+- **Modern Typography**: Geist Sans and Geist Mono fonts
+- **Accessible Components**: Built with Radix UI primitives
+- **Smooth Animations**: Tailwind CSS animations
+- **Dark/Light Mode Ready**: CSS variables for theming
 
-- **Radix UI**: Accessible, unstyled components
-- **Tailwind CSS**: Utility-first CSS framework
-- **Class Variance Authority**: Type-safe component variants
-- **Lucide React**: Beautiful, customizable icons
+## 🔧 Configuration Files
 
-## 🔧 Configuration
-
-### Frontend Configuration
-
-- `next.config.ts` - Next.js configuration
-- `tailwind.config.js` - Tailwind CSS configuration
-- `tsconfig.json` - TypeScript configuration
-- `eslint.config.mjs` - ESLint configuration
-- `components.json` - UI components configuration
-
-### Backend Configuration
-
-- `go.mod` - Go module dependencies
-- `docker-compose.yml` - Docker services configuration
-- Environment variables for AI API integration
-
-## 📱 Responsive Design
-
-The application is fully responsive and optimized for:
-
-- Desktop computers
-- Tablets
-- Mobile devices
-
-## 🔒 Security Features
-
-- **Policy Database**: Built-in security policies for common topics
-- **Context-Aware Responses**: AI responses tailored to security onboarding
-- **CORS Protection**: Configured for secure frontend-backend communication
-- **Input Validation**: Proper request validation and sanitization
+| File | Purpose |
+|------|---------|
+| `next.config.ts` | Next.js framework configuration |
+| `tailwind.config.js` | Tailwind CSS customization |
+| `tsconfig.json` | TypeScript compiler options |
+| `eslint.config.mjs` | Code linting rules |
+| `components.json` | UI component library settings |
+| `postcss.config.mjs` | PostCSS processing |
 
 ## 🚀 Deployment
 
 ### Frontend Deployment
-
-The Next.js app can be deployed to:
-
-- Vercel (recommended)
-- Netlify
-- Any Node.js hosting platform
+Deploy to any of these platforms:
+- **Vercel** (recommended for Next.js)
+- **Netlify**
+- **AWS Amplify**
+- **Any Node.js hosting**
 
 ### Backend Deployment
+Deploy using:
+- **Docker containers** (recommended)
+- **Google Cloud Run**
+- **AWS ECS/Fargate**
+- **Traditional VPS**
 
-The Go backend can be deployed to:
+### Production Environment Variables
+```bash
+# Frontend
+NEXT_PUBLIC_API_URL=https://your-api-domain.com/api
 
-- Docker containers
-- Cloud platforms (AWS, GCP, Azure)
-- Traditional VPS servers
+# Backend
+OLLAMA_URL=https://your-ollama-instance.com
+HF_TOKEN=your_production_hf_token
+PORT=8080
+```
+
+## 🔒 Security Features
+
+- **Input Validation**: Comprehensive request validation and sanitization
+- **CORS Configuration**: Properly configured cross-origin resource sharing
+- **Environment Variables**: Sensitive data stored in environment variables
+- **Error Handling**: Graceful error handling with fallback responses
+- **Policy Database**: Built-in security policy knowledge base
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+### Development Guidelines
+- Follow TypeScript best practices
+- Use conventional commit messages
+- Ensure all tests pass
+- Update documentation for new features
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🆘 Support
+## 🆘 Support & Troubleshooting
 
-For support and questions:
+### Common Issues
 
+**Frontend won't start:**
+- Ensure Node.js 18+ is installed
+- Run `npm install` to install dependencies
+- Check for port conflicts (3000)
+
+**Backend connection errors:**
+- Verify Go 1.23+ is installed
+- Check backend is running on port 8080
+- Verify API URL in frontend configuration
+
+**AI responses not working:**
+- Check environment variables are set
+- Verify Ollama/Colab setup (see setup guide)
+- Check console logs for API errors
+
+### Getting Help
 - Check the documentation
+- Review the setup guides in `backend/`
 - Open an issue in the repository
 - Contact your IT team for security-specific questions
 
