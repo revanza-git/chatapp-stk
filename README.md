@@ -2,7 +2,7 @@
 
 A comprehensive, AI-powered platform designed to help organizations manage IT security policies, user onboarding, and document management. Built with Next.js 15, React 19, TypeScript for the frontend and Go with Gin for the backend, fully containerized with Docker.
 
-🌟 **NEW**: Deploy to the cloud for **FREE** with Railway! See [Cloud Deployment Guide](DEPLOYMENT.md) for details.
+🌟 **Railway Ready**: This project is specifically designed and optimized for **FREE** deployment on Railway! All components are fully tested and configured for seamless Railway hosting.
 
 ## 🚀 Features
 
@@ -210,6 +210,8 @@ chatapp-stk/
 ├── app/                          # Next.js App Router
 │   ├── dashboard/
 │   │   └── page.tsx             # Main dashboard with document management
+│   ├── debug/
+│   │   └── page.tsx             # Environment variables debug page
 │   ├── login/
 │   │   └── page.tsx             # User login page
 │   ├── register/
@@ -257,8 +259,8 @@ chatapp-stk/
 │   └── setup_colab_integration.md # AI setup documentation
 │
 ├── Docker Configuration
-│   ├── docker-compose.yml       # Multi-service orchestration
-│   ├── Dockerfile.frontend      # Frontend container
+│   ├── docker-compose.yml       # Multi-service orchestration with env vars
+│   ├── Dockerfile.frontend      # Frontend container with build args
 │   ├── docker-start.bat         # Windows startup script
 │   ├── docker-start.sh          # Linux/macOS startup script
 │   ├── DOCKER.md               # Comprehensive Docker guide
@@ -423,35 +425,7 @@ HF_TOKEN=your-hugging-face-token-here
 
 # Server Configuration
 PORT=8080
-```
-
-#### Cloud Deployment Environment Variables
-For cloud platforms like Railway, set these environment variables directly in your platform's dashboard:
-
-**Frontend Service:**
-```bash
-NEXT_PUBLIC_API_URL=https://your-backend-url.railway.app
-NODE_ENV=production
-```
-
-**Backend Service:**
-```bash
-# Database (automatically provided by Railway PostgreSQL)
-DATABASE_URL=postgresql://username:password@host:port/database
-
-# Security (generate secure values)
-JWT_SECRET=your-super-secure-random-jwt-secret-minimum-32-characters
-
-# AI Configuration
-AI_ENABLED=false
-OLLAMA_HOST=
-HF_TOKEN=
-
-# Server
-PORT=8080
-
-# CORS
-FRONTEND_URL=https://your-frontend-url.railway.app
+FRONTEND_URL=http://localhost:3000
 ```
 
 ## 🤖 AI Integration
@@ -488,107 +462,132 @@ The chatbot uses a robust multi-tier AI system:
 - **System Monitoring**: Health checks and performance metrics
 - **Data Backup**: Automated database and file backups
 
-## 🚀 Local Development with Docker
+## ☁️ Railway Deployment (FREE)
 
-### Docker Management
-```bash
-# View service status
-docker-compose ps
+Deploy your application to Railway for **FREE**! This project is specifically built and optimized for Railway with automatic scaling and SSL certificates.
 
-# View logs
-docker-compose logs -f [service-name]
-
-# Restart services
-docker-compose restart [service-name]
-
-# Reset everything
-docker-compose down -v
-docker-compose up --build -d
-```
-
-### Health Checks
-```bash
-# Backend health
-curl http://localhost:8080/api/health
-
-# Frontend
-curl http://localhost:3000
-
-# Database connection
-docker-compose exec postgres psql -U chatbot_user -d chatbot_db -c "SELECT 1;"
-```
-
-## ☁️ Cloud Deployment (FREE)
-
-Deploy your application to Railway for **FREE**! The platform is optimized for cloud deployment with automatic scaling and SSL certificates.
-
-### 🚀 **Quick Deploy with Railway (Recommended)**
+### 🚀 **Railway Deployment (Tested & Optimized)**
 
 #### Prerequisites
 - GitHub account with your code pushed
-- Railway account (free signup)
+- Railway account (free signup at [railway.app](https://railway.app))
 
-#### Deployment Steps
-1. **Push your code to GitHub**:
-   ```bash
-   git add .
-   git commit -m "Ready for Railway deployment"
-   git push origin main
-   ```
-
-2. **Deploy on Railway**:
-   - Visit [railway.app](https://railway.app) and sign up
+#### Step 1: Deploy Backend
+1. **Create Railway Project**: 
    - Click "New Project" → "Deploy from GitHub repo"
    - Select your repository
-   - Railway will automatically detect your Docker setup
+   - Choose "Deploy Backend" service
 
-3. **Configure Services**:
-   Railway will create two services:
-   - **Frontend**: Next.js application
-   - **Backend**: Go API server
-   - **Database**: PostgreSQL (automatically provisioned)
+2. **Configure Backend**:
+   - **Root Directory**: `backend`
+   - **Environment Variables**:
+     ```env
+     JWT_SECRET=your-super-secure-random-jwt-secret-minimum-32-characters
+     AI_ENABLED=false
+     PORT=8080
+     ```
+   - Railway will auto-provide `DATABASE_URL` for PostgreSQL
 
-4. **Set Environment Variables**:
-   
-   **Frontend Service Variables:**
+3. **Add PostgreSQL Database**: 
+   - Click "New" → "Database" → "PostgreSQL"
+   - Railway automatically connects it to your backend
+
+#### Step 2: Deploy Frontend
+1. **Add Frontend Service**:
+   - Click "New" → "GitHub Repo" → Same repository
+   - Choose "Deploy Frontend" service
+
+2. **Configure Frontend**:
+   - **Root Directory**: `.` (root)
+   - **Build Command**: `npm run build`
+   - **Start Command**: `npm start`
+   - **Environment Variables**:
+     ```env
+     NEXT_PUBLIC_API_URL=https://your-backend-service.up.railway.app
+     NODE_ENV=production
+     ```
+
+#### Step 3: Configure CORS
+1. **Get Frontend URL**: Copy your frontend's Railway URL
+2. **Update Backend Variables**: Add this to your backend service:
    ```env
-   NEXT_PUBLIC_API_URL=https://your-backend-service.railway.app
-   NODE_ENV=production
-   ```
-   
-   **Backend Service Variables:**
-   ```env
-   JWT_SECRET=VElJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUk=
-   AI_ENABLED=false
-   FRONTEND_URL=https://your-frontend-service.railway.app
-   PORT=8080
+   FRONTEND_URL=https://your-frontend-service.up.railway.app
    ```
 
-5. **Deploy**: Railway automatically builds and deploys! 🎉
+#### Step 4: Deploy & Test
+- Railway automatically builds and deploys both services
+- Frontend will be available at: `https://your-frontend-service.up.railway.app`
+- Backend API at: `https://your-backend-service.up.railway.app`
 
-#### After Deployment
-- Your frontend will be available at: `https://your-frontend-service.railway.app`
-- Your backend API will be at: `https://your-backend-service.railway.app`
-- Database is automatically connected and managed
+### 🔧 **Environment Variables Reference**
 
-### 🔧 **Alternative Cloud Platforms**
+#### ✅ **Frontend Service (Railway)**
+```env
+NEXT_PUBLIC_API_URL=https://chatapp-backend-production-XXXX.up.railway.app
+NODE_ENV=production
+```
 
-| Platform | Free Tier | Database | Difficulty | Best For |
-|----------|-----------|----------|------------|----------|
-| **Railway** ⭐ | $5 credits/month | PostgreSQL included | ⭐ Easy | Docker apps |
-| **Render** | 750hrs/service | 90 days free | ⭐⭐ Medium | Multiple services |
-| **Fly.io** | 3 shared VMs | Paid after limit | ⭐⭐⭐ Advanced | Performance |
+#### ✅ **Backend Service (Railway)**
+```env
+# Auto-provided by Railway PostgreSQL
+DATABASE_URL=postgresql://username:password@host:port/database
 
-### 🛡️ **Cloud Optimizations**
+# Set these manually
+JWT_SECRET=VElJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUk=
+AI_ENABLED=false
+PORT=8080
+FRONTEND_URL=https://chatapp-frontend-production-XXXX.up.railway.app
+```
+
+### 🐛 **Debugging Cloud Deployment**
+
+#### Use the Debug Page
+Visit `https://your-frontend-url.railway.app/debug` to see:
+- ✅ Environment variables loaded correctly
+- ✅ API URL configuration
+- ✅ Build-time vs runtime values
+
+#### Common Fixes Applied
+- ✅ **Fixed Docker build args**: Environment variables now pass correctly during build
+- ✅ **Fixed CORS**: Backend allows frontend domain automatically
+- ✅ **Fixed hardcoded URLs**: All localhost references use environment variables
+- ✅ **Fixed docker-compose**: Uses `${VAR:-fallback}` syntax for cloud compatibility
+
+### 🛡️ **Railway Optimizations**
 - ✅ **AI Disabled by default**: Saves compute resources for free tier
-- ✅ **Multi-stage Docker builds**: Efficient containers
+- ✅ **Multi-stage Docker builds**: Efficient containers  
 - ✅ **Automatic SSL/HTTPS**: Secure connections included
 - ✅ **Database included**: PostgreSQL automatically provisioned
 - ✅ **Auto-scaling**: Handles traffic spikes automatically
-
-**📖 For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md)**
+- ✅ **Environment Variables**: Properly configured for build and runtime
 
 ## 🛠️ Troubleshooting
+
+### ✅ **Recently Fixed Issues**
+
+#### Frontend Environment Variables
+**Problem**: Frontend calling `localhost:8080` instead of Railway backend  
+**Solution**: Fixed `Dockerfile.frontend` to accept build arguments:
+```dockerfile
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+```
+
+#### CORS Issues
+**Problem**: `Access-Control-Allow-Origin` header missing  
+**Solution**: Backend now includes Railway frontend URL in CORS config:
+```go
+allowedOrigins = append(allowedOrigins, "https://your-frontend.up.railway.app")
+```
+
+#### Docker Environment Variables
+**Problem**: `docker-compose.yml` overriding Railway environment variables  
+**Solution**: Use environment variable fallbacks:
+```yaml
+environment:
+  - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8080}
+  - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+```
 
 ### Common Issues
 
@@ -599,10 +598,18 @@ Deploy your application to Railway for **FREE**! The platform is optimized for c
 4. **File uploads failing**: Check volume permissions and disk space
 
 #### Cloud Deployment
-1. **Frontend calling localhost**: Ensure `NEXT_PUBLIC_API_URL` is set correctly in cloud platform
-2. **Authentication errors**: Verify `JWT_SECRET` is set and matches between frontend/backend
-3. **CORS issues**: Ensure `FRONTEND_URL` is set in backend environment variables
-4. **Database connection**: Check if DATABASE_URL is automatically provided by your cloud platform
+1. **Frontend calling localhost**: 
+   - ✅ **Fixed**: Ensure `NEXT_PUBLIC_API_URL` is set correctly in Railway Variables
+   - ✅ **Fixed**: Check `/debug` page to verify environment variables
+
+2. **Authentication errors**: 
+   - ✅ **Fixed**: Verify `JWT_SECRET` is set and matches between frontend/backend
+
+3. **CORS issues**: 
+   - ✅ **Fixed**: Ensure `FRONTEND_URL` is set in backend environment variables
+
+4. **Database connection**: 
+   - ✅ **Fixed**: Railway auto-provides `DATABASE_URL`
 
 ### Debug Commands
 ```bash
@@ -614,7 +621,17 @@ curl http://localhost:8080/api/health
 # Check environment variables (local)
 docker-compose exec frontend printenv | grep NEXT_PUBLIC
 docker-compose exec backend printenv | grep JWT_SECRET
+
+# Railway debugging
+# Visit: https://your-frontend.railway.app/debug
 ```
+
+### 🔍 **Debug Page**
+Visit `/debug` on your deployed frontend to see:
+- Current environment variables
+- API URL configuration  
+- Build vs runtime settings
+- CORS configuration status
 
 ## 📄 Documentation
 
@@ -647,8 +664,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ### Getting Help
 1. Check the [Docker Guide](DOCKER.md) for setup issues
 2. Review logs with `docker-compose logs -f`
-3. Open an issue in the repository
-4. Contact your IT team for security-specific questions
+3. Use the `/debug` page for environment variable issues
+4. Open an issue in the repository
+5. Contact your IT team for security-specific questions
 
 ### System Requirements
 - **Minimum**: 4GB RAM, 2 CPU cores, 10GB disk space
@@ -659,7 +677,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 **Note**: This platform is designed for IT security policy management and user onboarding. For production deployments, always use secure JWT secrets and follow your organization's security guidelines.
 
-Built with ❤️ using Next.js, Go, and Docker. Optimized for Railway deployment.
-
-# Railway redeploy trigger#   F o r c e   R a i l w a y   r e d e p l o y   0 7 / 1 7 / 2 0 2 5   0 0 : 1 2 : 4 7  
- 
+Built with ❤️ using Next.js, Go, and Docker. Fully tested and optimized for Railway deployment.
