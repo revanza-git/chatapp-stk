@@ -1536,6 +1536,7 @@ func main() {
 		"http://localhost:3000",     // Development frontend
 		"http://frontend:3000",      // Docker container frontend
 		"http://127.0.0.1:3000",     // Alternative localhost
+		"https://chatapp-frontend-production-c45e.up.railway.app", // Railway production frontend
 	}
 	
 	// Add production frontend URL if specified
